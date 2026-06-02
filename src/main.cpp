@@ -20,12 +20,12 @@ void viewCredentials();
 
 void menu()
 {
-    cout << endl;
-    cout << "Password Manager" << endl
-         << endl;
-    cout << "1. Add Credential  " << endl;
-    cout << "2. View Credentials" << endl;
-    cout << "3. Exit" << endl;
+    cout << endl
+         << "Password Manager" << endl
+         << endl
+         << "1. Add Credential  " << endl
+         << "2. View Credentials" << endl
+         << "3. Exit" << endl;
     int x;
     cin >> x;
     switch (x)
