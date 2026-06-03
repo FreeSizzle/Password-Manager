@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <random>
 using namespace std;
 
 class Credentials
@@ -22,6 +23,7 @@ class PasswordManager{
         void searchCredential();
         void deleteCredential();
         void updateCredential();
+        void generatePassword();
         void write();
 
 };
@@ -36,7 +38,8 @@ void menu(PasswordManager &manager)
          << "3. Search Credential" << endl
          << "4. Delete Credential" << endl
          << "5. Update Credential"<<endl
-         << "6. Exit" << endl;
+         << "6. Generate Password"<<endl
+         << "7. Exit" << endl;
     int x;
     cin >> x;
     cin.ignore();
@@ -59,10 +62,13 @@ void menu(PasswordManager &manager)
         manager.updateCredential();
         break;
     case 6:
+        manager.generatePassword();
+        break;
+    case 7:
         cout << "Exiting program" << endl;
         exit(0);
     default:
-        cout << "Enter valid credential" << endl;
+        cout << "Enter valid menu item" << endl;
     }
 }
 void PasswordManager:: write(){
@@ -194,6 +200,33 @@ void PasswordManager::updateCredential()
         }
     }
     write();
+}
+void PasswordManager::generatePassword()
+{
+    int length;
+
+    cout << "Enter password length: ";
+    cin >> length;
+
+    string chars =
+        "abcdefghijklmnopqrstuvwxyz"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "0123456789"
+        "!@#$%^&*";
+
+    random_device rd;
+    mt19937 gen(rd());
+
+    uniform_int_distribution<> dist(0, chars.size() - 1);
+
+    string password;
+
+    for(int i = 0; i < length; i++)
+    {
+        password += chars[dist(gen)];
+    }
+
+    cout << "Generated Password: " << password << endl;
 }
 int main()
 {
