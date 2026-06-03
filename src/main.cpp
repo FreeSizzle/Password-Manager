@@ -19,6 +19,7 @@ void loadCredentials();
 void viewCredentials();
 void searchCredential();
 void deleteCredential();
+void updateCredential();
 void menu()
 {
     cout << endl
@@ -27,8 +28,9 @@ void menu()
          << "1. Add Credential  " << endl
          << "2. View Credentials" << endl
          << "3. Search Credential" << endl
-         << "4. Delete Credential"<<endl
-         << "5. Exit"<<endl;
+         << "4. Delete Credential" << endl
+         << "5. Update Credential"<<endl
+         << "6. Exit" << endl;
     int x;
     cin >> x;
     cin.ignore();
@@ -48,11 +50,27 @@ void menu()
         deleteCredential();
         break;
     case 5:
+        updateCredential();
+        break;
+    case 6:
         cout << "Exiting program" << endl;
         exit(0);
     default:
         cout << "Enter valid credential" << endl;
     }
+}
+void write(){
+    ofstream file("../data/passwords.txt", ios::out);
+    for (auto c : cred)
+    {
+        file << c.website
+             << "|"
+             << c.username
+             << "|"
+             << c.password
+             << endl;
+    }
+    file.close();
 }
 void addCredentials()
 {
@@ -64,19 +82,7 @@ void addCredentials()
     cout << "Enter password:" << endl;
     cin >> c.password;
     cred.push_back(c);
-    ofstream file("../data/passwords.txt", ios::app);
-    if (!file)
-    {
-        cout << "Error opening file\n";
-        return;
-    }
-    file << c.website
-         << "|"
-         << c.username
-         << "|"
-         << c.password
-         << endl;
-    file.close();
+    write();
     cout << "Credentials added succesfully!" << endl;
 }
 void loadCredentials()
@@ -123,48 +129,65 @@ void viewCredentials()
         cout << "\n---------------------\n";
     }
 }
-void searchCredential(){
-    cout<<"Enter username to search :"<<endl;
+void searchCredential()
+{
+    cout << "Enter username to search :" << endl;
     string target;
-    cin>>target;
-    int flag =0;
-    for (auto x :cred){
-        if(x.username  == target){
-            cout<<"Credential Found"<<endl;
-            flag =1;
-            cout<<x.website<<"|"<<x.username<<"|"<<x.password<<endl;
+    cin >> target;
+    int flag = 0;
+    for (auto x : cred)
+    {
+        if (x.username == target)
+        {
+            cout << "Credential Found" << endl;
+            flag = 1;
+            cout << x.website << "|" << x.username << "|" << x.password << endl;
         }
     }
-    if(flag ==0) cout<<"Credential Not Found"<<endl;
+    if (flag == 0)
+        cout << "Credential Not Found" << endl;
 }
-void deleteCredential(){
-    cout<<"Enter username to delete:"<<endl;
+void deleteCredential()
+{
+    cout << "Enter username to delete:" << endl;
     string target;
-    cin>>target;
+    cin >> target;
     auto it = cred.begin();
-    int flag =0;
-    while (it != cred.end()) {
-        if (it->username == target) {
-             it = cred.erase(it);
-             cout<<"Credential Deleted"<<endl;
-             flag = 1;
+    int flag = 0;
+    while (it != cred.end())
+    {
+        if (it->username == target)
+        {
+            it = cred.erase(it);
+            cout << "Credential Deleted" << endl;
+            flag = 1;
         }
-        else {
-             ++it;
+        else
+        {
+            ++it;
         }
     }
-    if(flag ==0)cout<<"Credential Not Found"<<endl;
+    if (flag == 0)
+        cout << "Credential Not Found" << endl;
 
-    ofstream file("../data/passwords.txt", ios::out);
-    for(auto c :cred){
-        file << c.website
-         << "|"
-         << c.username
-         << "|"
-         << c.password
-         << endl;
+    write();
+}
+void updateCredential()
+{
+    string s;
+    cout << "Enter username:" << endl;
+    cin >> s;
+    for (auto c : cred)
+    {
+        if (c.username == s){
+            cout<<"Enter new password:"<<endl;
+            string pass;
+            cin>>pass;
+            c.password = pass;
+            cout<<"Password Changed";
+        }
     }
-    file.close();
+    write();
 }
 int main()
 {
