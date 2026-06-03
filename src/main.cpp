@@ -12,16 +12,22 @@ public:
     string username;
     string password;
 };
+class PasswordManager{
+    private:
+        vector<Credentials> cred;
+    public:
+        void addCredentials();
+        void loadCredentials();
+        void viewCredentials();
+        void searchCredential();
+        void deleteCredential();
+        void updateCredential();
+        void write();
 
-vector<Credentials> cred;
-void addCredentials();
-void loadCredentials();
-void viewCredentials();
-void searchCredential();
-void deleteCredential();
-void updateCredential();
-void menu()
+};
+void menu(PasswordManager &manager)
 {
+
     cout << endl
          << "Password Manager" << endl
          << endl
@@ -37,20 +43,20 @@ void menu()
     switch (x)
     {
     case 1:
-        addCredentials();
+        manager.addCredentials();
         break;
 
     case 2:
-        viewCredentials();
+        manager.viewCredentials();
         break;
     case 3:
-        searchCredential();
+        manager.searchCredential();
         break;
     case 4:
-        deleteCredential();
+        manager.deleteCredential();
         break;
     case 5:
-        updateCredential();
+        manager.updateCredential();
         break;
     case 6:
         cout << "Exiting program" << endl;
@@ -59,7 +65,7 @@ void menu()
         cout << "Enter valid credential" << endl;
     }
 }
-void write(){
+void PasswordManager:: write(){
     ofstream file("../data/passwords.txt", ios::out);
     for (auto c : cred)
     {
@@ -72,7 +78,7 @@ void write(){
     }
     file.close();
 }
-void addCredentials()
+void PasswordManager::addCredentials()
 {
     Credentials c;
     cout << "Enter website:" << endl;
@@ -85,7 +91,7 @@ void addCredentials()
     write();
     cout << "Credentials added succesfully!" << endl;
 }
-void loadCredentials()
+void PasswordManager::loadCredentials()
 {
     cred.clear();
     ifstream file("../data/passwords.txt");
@@ -113,7 +119,7 @@ void loadCredentials()
     }
     file.close();
 }
-void viewCredentials()
+void PasswordManager::viewCredentials()
 {
     if (cred.empty())
     {
@@ -129,7 +135,7 @@ void viewCredentials()
         cout << "\n---------------------\n";
     }
 }
-void searchCredential()
+void PasswordManager:: searchCredential()
 {
     cout << "Enter username to search :" << endl;
     string target;
@@ -147,7 +153,7 @@ void searchCredential()
     if (flag == 0)
         cout << "Credential Not Found" << endl;
 }
-void deleteCredential()
+void PasswordManager::deleteCredential()
 {
     cout << "Enter username to delete:" << endl;
     string target;
@@ -172,12 +178,12 @@ void deleteCredential()
 
     write();
 }
-void updateCredential()
+void PasswordManager::updateCredential()
 {
     string s;
     cout << "Enter username:" << endl;
     cin >> s;
-    for (auto c : cred)
+    for (auto &c : cred)
     {
         if (c.username == s){
             cout<<"Enter new password:"<<endl;
@@ -191,10 +197,11 @@ void updateCredential()
 }
 int main()
 {
-    loadCredentials();
+    PasswordManager manager;
+    manager.loadCredentials();
     while (true)
     {
-        menu();
+        menu(manager);
     }
     return 0;
 }
