@@ -11,4 +11,5 @@ public:
     std::string password;
 };
 
+
 #endif
