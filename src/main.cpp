@@ -26,6 +26,8 @@ class PasswordManager{
         void deleteCredential();
         void updateCredential();
         void generatePassword();
+        string encrypt(string text);
+        string decrypt(string text);
         void write();
         void changeMasterPassword();
         bool login();
@@ -84,7 +86,7 @@ void PasswordManager:: write(){
              << "|"
              << c.username
              << "|"
-             << c.password
+             << encrypt(c.password)
              << endl;
     }
     file.close();
@@ -124,7 +126,7 @@ void PasswordManager::loadCredentials()
         Credentials c;
         c.website = website;
         c.username = username;
-        c.password = password;
+        c.password = decrypt(password);
 
         cred.push_back(c);
     }
@@ -276,6 +278,45 @@ void PasswordManager::changeMasterPassword()
     file.close();
 
     cout << "Master password updated successfully." << endl;
+}
+#include <iomanip>
+#include <sstream>
+
+string PasswordManager::encrypt(string text)
+{
+    char key = 'K';
+
+    stringstream ss;
+
+    for(char c : text)
+    {
+        unsigned char encrypted = c ^ key;
+
+        ss << hex
+           << setw(2)
+           << setfill('0')
+           << (int)encrypted;
+    }
+
+    return ss.str();
+}
+string PasswordManager::decrypt(string text)
+{
+    char key = 'K';
+
+    string result;
+
+    for(size_t i = 0; i < text.length(); i += 2)
+    {
+        string byteString = text.substr(i, 2);
+
+        char encrypted =
+            (char)strtol(byteString.c_str(), nullptr, 16);
+
+        result += encrypted ^ key;
+    }
+
+    return result;
 }
 int main()
 {
