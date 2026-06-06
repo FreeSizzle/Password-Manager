@@ -6,6 +6,8 @@
 #include <random>
 using namespace std;
 
+string masterPassword = "Manage";
+
 class Credentials
 {
 public:
@@ -25,6 +27,8 @@ class PasswordManager{
         void updateCredential();
         void generatePassword();
         void write();
+        void changeMasterPassword();
+        bool login();
 
 };
 void menu(PasswordManager &manager)
@@ -39,7 +43,8 @@ void menu(PasswordManager &manager)
          << "4. Delete Credential" << endl
          << "5. Update Credential"<<endl
          << "6. Generate Password"<<endl
-         << "7. Exit" << endl;
+         << "7. Change Master Password" << endl
+         << "8. Exit"<<endl;
     int x;
     cin >> x;
     cin.ignore();
@@ -228,13 +233,65 @@ void PasswordManager::generatePassword()
 
     cout << "Generated Password: " << password << endl;
 }
+bool PasswordManager::login()
+{
+    ifstream file("../data/master.txt");
+
+    if(!file)
+    {
+        cout << "Master password file not found." << endl;
+        return false;
+    }
+
+    string storedPassword;
+    getline(file, storedPassword);
+
+    file.close();
+
+    string enteredPassword;
+
+    cout << "Enter Master Password: ";
+    cin >> enteredPassword;
+
+    if(enteredPassword == storedPassword)
+    {
+        cout << "Login Successful!" << endl;
+        return true;
+    }
+
+    cout << "Incorrect Password!" << endl;
+    return false;
+}
+void PasswordManager::changeMasterPassword()
+{
+    string newPassword;
+
+    cout << "Enter new master password: ";
+    cin >> newPassword;
+
+    ofstream file("../data/master.txt");
+
+    file << newPassword;
+
+    file.close();
+
+    cout << "Master password updated successfully." << endl;
+}
 int main()
 {
     PasswordManager manager;
+
+    if(!manager.login())
+    {
+        return 0;
+    }
+
     manager.loadCredentials();
-    while (true)
+
+    while(true)
     {
         menu(manager);
     }
+
     return 0;
 }
