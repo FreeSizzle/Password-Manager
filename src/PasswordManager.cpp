@@ -26,6 +26,7 @@ void PasswordManager::write()
     file.close();
 }
 
+
 void PasswordManager::addCredentials()
 {
     Credentials c;
